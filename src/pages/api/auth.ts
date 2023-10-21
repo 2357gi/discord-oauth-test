@@ -1,7 +1,7 @@
 // src/pages/api/auth.ts
 import axios, {AxiosResponse} from "axios";
 import { NextApiRequest, NextApiResponse } from 'next';
-import withSession from '../../lib/session';  // 追加
+import withSession from '@/lib/session';  // 追加
 import { DiscordGuild, DiscordUser } from "@/types/DiscordTypes"; // 型定義のインポート
 
 export default withSession(async function handler(req: NextApiRequest, res: NextApiResponse) {  // withSessionを追加
@@ -11,8 +11,6 @@ export default withSession(async function handler(req: NextApiRequest, res: Next
     console.log(req)
     return res.status(400).send('No code provided');
   }
-
-  console.log(code)
 
   // 環境変数のチェック
   const clientId: string | undefined = process.env.DISCORD_CLIENT_ID;
@@ -39,7 +37,6 @@ export default withSession(async function handler(req: NextApiRequest, res: Next
     });
 
     const userToken = tokenResponse.data.access_token;
-    console.log('userToken:' + userToken)
 
     // ユーザー情報を取得
     const userResponse :AxiosResponse = await axios.get<DiscordUser>('https://discord.com/api/users/@me', {
@@ -49,12 +46,10 @@ export default withSession(async function handler(req: NextApiRequest, res: Next
     });
 
     const userId: string = userResponse.data.id
-    const userName: string = userResponse.data.name
-
-    console.log('userId:' + userId)
+    const userName: string = userResponse.data.username
 
     const SCGuildId: string | undefined = process.env.SC_GUILD_ID;
-    const ICSGuildId: string | undefined = process.env.SC_GUILD_ID;
+    const ICSGuildId: string | undefined = process.env.ICS_GUILD_ID;
 
     if (!SCGuildId || !ICSGuildId) {
       console.error('GUILD_ID is not set');

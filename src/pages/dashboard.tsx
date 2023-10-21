@@ -42,13 +42,14 @@ export default function Dashboard() {
   return (
     <div>
       <h1>Dashboard</h1>
-      <p>Is SC member: {authData.isSCMember ? 'Yes' : 'No'}</p>
-      <p>Is ICS member: {authData.isICSMember ? 'Yes' : 'No'}</p>
+      <p>SC Serverのメンバーですか？: {authData.isSCMember ? 'Yes' : 'No'}</p>
+      <p>ICS Serverのメンバーですか？: {authData.isICSMember ? 'Yes' : 'No'}</p>
       <p>User Name: {authData.userName}</p>
       <p>User ID: {authData.userId}</p>
       <form>
         <p>
-          Discordアカウントとminecraft idを紐付け<br/>
+          Discordアカウントとminecraft idを紐付け。<br/>
+          SCに参加している場合のみ以下のフォームが出るイメージ。<br/>
           登録したMinecraft idががサーバのホワイトリストに登録されます。
         </p>
         <input placeholder="Minecraft Id"/>

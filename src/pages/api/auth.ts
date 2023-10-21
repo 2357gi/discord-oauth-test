@@ -24,8 +24,6 @@ export default withSession(async function handler(req: NextApiRequest, res: Next
     return res.status(500).send('Internal Server Error');
   }
 
-  console.log('env set complete\nclientId {}', clientId)
-
   try {
     const tokenResponse = await axios.post('https://discord.com/api/oauth2/token', new URLSearchParams({
       client_id: clientId,
@@ -43,10 +41,6 @@ export default withSession(async function handler(req: NextApiRequest, res: Next
     const userToken = tokenResponse.data.access_token;
     console.log('userToken:' + userToken)
 
-    // トークンをセッションに保存
-    req.session.set('userToken', userToken);
-    await req.session.save();
-
     // ユーザー情報を取得
     const userResponse :AxiosResponse = await axios.get<DiscordUser>('https://discord.com/api/users/@me', {
       headers: {
@@ -55,6 +49,7 @@ export default withSession(async function handler(req: NextApiRequest, res: Next
     });
 
     const userId: string = userResponse.data.id
+    const userName: string = userResponse.data.name
 
     console.log('userId:' + userId)
 
@@ -73,8 +68,6 @@ export default withSession(async function handler(req: NextApiRequest, res: Next
       }
     });
 
-    console.log('guildResponse:' + guildResponse)
-
     // 特定のギルドに参加しているか確認
     let isSCMember = false;
     let isICSMember = false;
@@ -82,7 +75,7 @@ export default withSession(async function handler(req: NextApiRequest, res: Next
 
     if (guildResponse.data) {
       isSCMember = guildResponse.data.some(guild => guild.id === SCGuildId);
-      isICSMember = guildResponse.data.some(guild => guild.id === SCGuildId);
+      isICSMember = guildResponse.data.some(guild => guild.id === ICSGuildId);
 
 //       // もしメンバーだったら、ニックネームも取得
 //       if (isMember) {
@@ -98,7 +91,7 @@ export default withSession(async function handler(req: NextApiRequest, res: Next
     return res.status(200).json({
       isSCMember: isSCMember,
       isICSMember: isICSMember,
-      nickName,
+      userName,
       userId
     });
   } catch (error) {

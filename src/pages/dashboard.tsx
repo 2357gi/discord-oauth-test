@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';  // useRouter をインポート
 interface AuthData {
   isSCMember: boolean;
   isICSMember: boolean;
-  nickName: string;
+  userName: string;
   userId: string;
 }
 
@@ -38,7 +38,7 @@ export default function Dashboard() {
       <h1>Dashboard</h1>
       <p>Is SC member: {authData.isSCMember ? 'Yes' : 'No'}</p>
       <p>Is ICS member: {authData.isICSMember ? 'Yes' : 'No'}</p>
-      <p>Nickname: {authData.nickName}</p>
+      <p>User Name: {authData.userName}</p>
       <p>User ID: {authData.userId}</p>
     </div>
   );
